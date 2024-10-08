@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Orders</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/styles/adminstyle/adminOrders.css">
+</head>
+<body>
+  <div class="admin-container">
+    <div class="sidebar">
+      <div class="logo">
+        <i class="fas fa-cog"></i>
+        <h2>Admin Panel</h2>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/admin"><i class="fas fa-home"></i> Dashboard</a></li>
+          <li><a href="/admin/admin-products"><i class="fas fa-box"></i> Products</a></li>
+          <li><a href="/admin/admin-categories"><i class="fas fa-tags"></i> Categories</a></li>
+          <li><a href="/admin/adminOrders" class="active"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+          <li><a href="/admin/admin-users"><i class="fas fa-sitemap"></i> Users</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="main-content">
+      <header>
+        <h1>Orders Management</h1>
+        <div class="user-info">
+          <span>Welcome, <%= admin.name %></span>
+          <% if (isAuth) { %>
+            <a href="/admin/adminlogout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>  
+            <% } else { %>
+              <a href="/admin/admin-login" class="logout-btn"><i class="fa fa-sign-in " aria-hidden="true"></i> Sign In</a>
+              <a href="/admin/admin-signup" class="logout-btn"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a>
+              <% } %>
+        </div>
+      </header>
+      <div class="dashboard-content">
+        <div class="card">
+          <h3>Total Orders</h3>
+          <p class="number">123</p>
+        </div>
+        <div class="card">
+          <h3>Pending Orders</h3>
+          <p class="number">23</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Order List</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Replace with dynamic content in real application -->
+            <tr>
+              <td>1001</td>
+              <td>John Doe</td>
+              <td>2024-07-22</td>
+              <td>Shipped</td>
+              <td>$123.45</td>
+              <td>
+                <a href="#" class="btn btn-view"><i class="fas fa-eye"></i> View</a>
+                <a href="#" class="btn btn-delete"><i class="fas fa-trash"></i> Delete</a>
+              </td>
+            </tr>
+            <tr>
+              <td>1002</td>
+              <td>Jane Smith</td>
+              <td>2024-07-21</td>
+              <td>Processing</td>
+              <td>$678.90</td>
+              <td>
+                <a href="#" class="btn btn-view"><i class="fas fa-eye"></i> View</a>
+                <a href="#" class="btn btn-delete"><i class="fas fa-trash"></i> Delete</a>
+              </td>
+            </tr>
+            <!-- More rows as needed -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Product</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/styles/adminstyle/add-product.css" />
+  </head>
+  <body>
+    <div class="admin-container">
+      <div class="sidebar">
+        <div class="logo">
+          <i class="fas fa-cog"></i>
+          <h2>Admin Panel</h2>
+        </div>
+        <nav>
+          <ul>
+            <li>
+              <a href="/admin"><i class="fas fa-home"></i> Dashboard</a>
+            </li>
+            <li>
+              <a href="/admin/admin-products" class="active"
+                ><i class="fas fa-box"></i> Products</a
+              >
+            </li>
+            <li>
+              <a href="/admin/admin-categories"
+                ><i class="fas fa-tags"></i> Categories</a
+              >
+            </li>
+            <li>
+              <a href="/admin/adminOrders"
+                ><i class="fas fa-shopping-cart"></i> Orders</a
+              >
+            </li>
+            <li>
+              <a href="/admin/admin-users"
+                ><i class="fas fa-sitemap"></i> Users</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="main-content">
+        <header>
+          <h1>Add Product</h1>
+          <div class="user-info">
+            <span>Welcome, <%= admin.name %></span>
+            <% if (isAuth) { %>
+            <a href="/admin/adminlogout" class="logout-btn"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+            <% } else { %>
+            <a href="/admin/admin-login" class="logout-btn"
+              ><i class="fa fa-sign-in" aria-hidden="true"></i> Sign In</a
+            >
+            <a href="/admin/admin-signup" class="logout-btn"
+              ><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a
+            >
+            <% } %>
+          </div>
+        </header>
+        <div class="form-container">
+          <form
+            action="/admin/add-product"
+            method="POST"
+            enctype="multipart/form-data"
+          >
+            <div class="form-group">
+              <label for="productName">Product Name:</label>
+              <input type="text" id="productName" name="productName" required />
+            </div>
+            <div class="form-group">
+              <label for="productImage">Product Image:</label>
+              <input
+                type="file"
+                id="productImage"
+                name="productImage"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="productDescription">Description:</label>
+              <textarea
+                id="productDescription"
+                name="productDescription"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="category">Category:</label>
+              <select id="category" name="category" required>
+                <option value="">Select Category</option>
+                <!-- Default placeholder option -->
+                <% categories.forEach(category => { %>
+                <option value="<%= category._id %>">
+                  <%= category.name %>
+                </option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="subcategory">Subcategory:</label>
+              <select id="subcategory" name="subcategory" required>
+                <option value="">Select Subcategory</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="price">Price:</label>
+              <input type="number" id="price" name="price" required />
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-add">
+                <i class="fas fa-plus"></i> Add Product
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const categorySelect = document.getElementById("category");
+        const subcategorySelect = document.getElementById("subcategory");
+
+        categorySelect.addEventListener("change", async function () {
+          const categoryId = this.value;
+
+          // Clear the subcategory dropdown
+          subcategorySelect.innerHTML =
+            '<option value="">Select Subcategory</option>';
+
+          if (categoryId) {
+            try {
+              const response = await fetch(
+                `/admin/get-subcategories/${categoryId}`
+              );
+              const data = await response.json();
+              console.log(data);
+
+              if (data.success) {
+                // Populate the subcategory dropdown
+                data.subcategories.forEach((subcategory) => {
+                  const option = document.createElement("option");
+                  option.value = subcategory._id;
+                  option.textContent = subcategory.name;
+                  subcategorySelect.appendChild(option);
+                });
+              } else {
+                console.error("Failed to load subcategories");
+              }
+            } catch (error) {
+              console.error("Error fetching subcategories:", error);
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

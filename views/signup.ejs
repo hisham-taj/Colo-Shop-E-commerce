@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signup Page</title>
+    <link rel="stylesheet" href="/styles/signup.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="container">
+        <form action="/index/signup" method="post">
+          <h1>Signup Page</h1>
+
+          <label for="name">Name</label>
+          <input type="text" name="name" id="name" />
+          <small id="nameError" class="errormsg"></small>
+          <br />
+
+          <label for="email">E-mail</label>
+          <input type="text" name="email" id="email" />
+          <% if (error?.emailError) { %>
+          <div id="emailError" class="errormsg"
+            ><%= error.emailError %>
+          </div>
+          <% } %>
+          <br />
+
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" />
+          <% if (error.passwordError) { %>
+          <div id="passError" class="errormsg"><%= error.passwordError %></div>
+          <% } %>
+          <br />
+
+          <label for="password2">Confirm Password</label>
+          <input type="password" name="password2" id="password2" />
+          <% if (error.password2Error) { %>
+          <div id="pass2Error" class="errormsg"
+            ><%= error.password2Error %></div
+          >
+          <% } %>
+          <br />
+
+          <button type="submit">Signup</button>
+          <a href="/index/login">Click here for login</a>
+        </form>
+
+        <script>
+          function validate(event) {
+            const username = document.getElementById("name").value;
+            const userError = document.getElementById("nameError");
+
+            const useremail = document.getElementById("email").value;
+            const uemail = document.getElementById("emailError");
+
+            const userpassword = document.getElementById("password").value;
+            const upassword = document.getElementById("passError");
+
+            const userpassword2 = document.getElementById("password2").value;
+            const upassword2 = document.getElementById("pass2Error");
+
+            // username check
+            if (username === "") {
+              userError.innerText = "Username is empty";
+              event.preventDefault();
+            } else if (username.length < 4) {
+              userError.innerText = "Username is too short";
+              event.preventDefault();
+            } else {
+              userError.innerText = "";
+            }
+
+            // email check
+            const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            if (useremail === "") {
+              uemail.innerText = "E-mail is empty";
+              event.preventDefault();
+            } else if (!emailFormat.test(useremail)) {
+              uemail.innerText = "   INVALID format";
+            } else {
+              uemail.innerText = "";
+            }
+
+            // password check
+            const passFormat =
+              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (userpassword === "") {
+              upassword.innerText = "password is empty";
+              event.preventDefault();
+            } else if (userpassword.length < 6) {
+              upassword.innerText = " password need atleast 6 characters";
+            } else if (!passFormat.test(userpassword)) {
+              upassword.innerText =
+                "password must contain uppercase, lowercase, one digit, and special character";
+              event.preventDefault();
+            } else if (userpassword !== userpassword2) {
+              upassword2.innerText = "Passwords do not match";
+              event.preventDefault();
+            } else {
+              upassword.innerText = "";
+              upassword2.innerText = "";
+            }
+          }
+
+          // return true; // Form will submit if all validations pass
+        </script>
+      </div>
+    </div>
+  </body>
+</html>

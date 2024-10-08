@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Users</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/styles/adminstyle/admin-users.css">
+</head>
+<body>
+  <div class="admin-container">
+    <div class="sidebar">
+      <div class="logo">
+        <i class="fas fa-cog"></i>
+        <h2>Admin Panel</h2>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="/admin"><i class="fas fa-home"></i> Dashboard</a></li>
+          <li><a href="/admin/admin-products"><i class="fas fa-box"></i> Products</a></li>
+          <li><a href="/admin/admin-categories"><i class="fas fa-tags"></i> Categories</a></li>
+          <li><a href="/admin/adminOrders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+          <li><a href="/admin/admin-users" class="active"><i class="fas fa-sitemap"></i> Users</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="main-content">
+      <header>
+        <h1>Users Management</h1>
+        <div class="user-info">
+          <span>Welcome, <%= admin.name %></span>
+            <% if (isAuth) { %>
+              <a href="/admin/adminlogout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>  
+            <% } else { %>
+              <a href="/admin/admin-login" class="logout-btn"><i class="fa fa-sign-in " aria-hidden="true"></i> Sign In</a>
+              <a href="/admin/admin-signup" class="logout-btn"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a>
+            <% } %>        
+        </div>
+      </header>
+      <div class="dashboard-content">
+        
+        <div class="card">
+          <div>
+          <h3>Number of admins</h3>
+        </div>
+          <p class="number">  <%= adminlength %> </p> 
+        </div>
+        <div class="card">
+          <div>
+          <h3>Number of customers</h3>
+          </div>
+          <p class="number">  <%= custlength %> </p> 
+        </div>
+      </div>
+      <div class="userList">
+        <h3>Admin List</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>username</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(user =>{  %>
+            <tr>
+              <td> <%=user._id %></td>
+              <td> <%=user.name %></td>
+              <td> <%=user.email %></td>
+              <td>
+                <!-- <a href="#" class="btn btn-delete"><i class="fas fa-ban"></i> Block</a> -->
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+
+        <h3>Customer List</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% customers.forEach(cust => { %>
+            <tr>
+              <td><%= cust._id %></td>
+              <td><%= cust.name %></td>
+              <td><%= cust.email %></td>
+              <td><%= cust.blocked ? 'Blocked' : 'Active' %></td>
+              <td>
+                <% if (cust.blocked) { %>
+                  <button class="btn btn-unblock" onclick="toggleBlock('<%= cust._id %>', false)">Unblock</button>
+                <% } else { %>
+                  <button class="btn btn-block" onclick="toggleBlock('<%= cust._id %>', true)">Block</button>
+                <% } %>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <script>
+async function toggleBlock(userId, blockStatus) {
+  // console.log("fetch");
+  console.log(blockStatus);
+  try {
+    const response = await fetch('/admin/block-customer', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId, blockStatus }),
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      // console.log("ssssssssssss");
+      alert(blockStatus ? 'Customer blocked successfully' : 'Customer unblocked successfully');
+      window.location.reload();
+    } else {
+      alert(`Failed to update customer status: ${data.message}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred while updating the customer status');
+  }
+}
+
+      
+    </script>
+  </div>
+</body>
+</html>

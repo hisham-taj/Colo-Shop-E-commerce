@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - E-commerce</title>
+    <link rel="stylesheet" href="/styles/login.css" />
+  </head>
+  <body>
+    <div class="background">
+      <div class="login-container">
+        <div id="title">
+          <h1>Login Page</h1>
+        </div>
+        <div class="contents">
+          <form action="/index/login" method="post">
+            <label for="email">Email</label>
+            <input type="text" name="email" id="email" />
+            <% if (error && error.type === 'email') { %>
+            <small id="emailError" class="errormsg"><%= error.message %></small>
+            <% } %>
+            <br />
+            <label for="password">Password</label>
+              <input type="password" name="password" id="password"  />
+              <input type="checkbox" onclick="showPassword()" />show password
+            </div>
+            <% if (error && error.type === 'password') { %>
+            <small id="passError" class="errormsg"><%= error.message %></small>
+            <% } %>
+            <br />
+            <button type="submit">Login</button>
+            <a href="/index/signup">Click here to signup</a>
+          </form>
+        </div>
+        <script>
+          function showPassword() {
+            var x = document.getElementById("password");
+            if (x.type === "password") {
+              x.type = "text";
+            } else {
+              x.type = "password";
+            }
+          }
+        </script>
+        <script>
+          const useremail = document.getElementById("email").value;
+          const uemail = document.getElementById("emailError");
+
+          const userpassword = document.getElementById("password").value;
+          const upasserror = document.getElementById("passError");
+          console.log("shai fh", userpassword);
+
+          if (useremail != email) {
+            uemail.innerText = "incorrect email";
+            event.preventDefault();
+          } else if (upasserror !== password) {
+            upasserror.innerText = "incorrect password";
+            event.preventDefault();
+          } else {
+            return res.redirect("/index");
+          }
+        </script>
+      </div>
+    </div>
+  </body>
+</html>
