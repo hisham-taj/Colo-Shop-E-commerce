@@ -183,7 +183,7 @@ const adminController = {
   getSubCategories: async (req, res) => {
     try {
       const { categoryId } = req.params;
-      const subcategories = await Subcategory.find({ parentCategory: categoryId });
+      const subcategories = await subCategory.find({ parentCategory: categoryId });
       res.json({ success: true, subcategories });
     } catch (error) {
       console.error(error);

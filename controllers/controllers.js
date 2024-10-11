@@ -1,10 +1,18 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('../model/user');
+const {Category , subCategory , product} = require('../model/Products-db');
 
 module.exports = controllers = {
-    getindex: (req, res) => {
-        res.render('index', { isAuth: req.session.isAuth, message: req.session.message });
+    getindex: async (req, res) => {
+        try {
+            const Products = await product.find().populate('category').populate('subcategory')
+
+        res.render('index', { isAuth: req.session.isAuth, message: req.session.message, Products });
+            
+        } catch (error) {
+            console.error(error)
+            res.status(500).send('server error in index')
+        }
     },
     getsignup: (req, res) => {
         const error = req.session.error1;

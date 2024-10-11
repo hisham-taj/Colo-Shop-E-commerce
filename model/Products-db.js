@@ -22,11 +22,13 @@ const productSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-
   },
   image: {
     type: String,
-
+  },
+  salesCount: {
+    type: Number,
+    default: 0,
   }
 });
 
