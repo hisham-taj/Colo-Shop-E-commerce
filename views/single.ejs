@@ -100,7 +100,7 @@
 								<li><a href="#">promotion</a></li>
 								<li><a href="#">pages</a></li>
 								<li><a href="#">blog</a></li>
-								<li><a href="/contact">contact</a></li>
+								<li><a href="/index/contact">contact</a></li>
 							</ul>
 							<ul class="navbar_user">
 								<li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
@@ -207,23 +207,44 @@
 						</div>
 						<div class="col-lg-9 image_col order-lg-2 order-1">
 							<div class="single_product_image">
-								<div class="single_product_image_background" style="background-image:url(images/single_2.jpg)"></div>
+								<div class="single_product_image_background" >
+									<div class="single_product_pics">
+										<div class="row">
+											<div class="col-lg-3 thumbnails_col order-lg-1 order-2">
+												<div class="single_product_thumbnails">
+													<ul>
+														<li><img src="/productImages/<%=Product.image %>" alt="" data-image="images/single_1.jpg"></li>
+														<li class="active"><img src="images/single_2_thumb.jpg" alt="" data-image="images/single_2.jpg"></li>
+														<li><img src="images/single_3_thumb.jpg" alt="" data-image="images/single_3.jpg"></li>
+													</ul>
+												</div>
+											</div>
+											<div class="col-lg-9 image_col order-lg-2 order-1">
+												<div class="single_product_image">
+													<div class="single_product_image_background" >
+														<img src="/productImages/<%=Product.image %>" alt="">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-5">
+				
 				<div class="product_details">
 					<div class="product_details_title">
-						<h2>Pocket cotton sweatshirt</h2>
-						<p>Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis ut...</p>
+						<h2><%= Product.name%></h2>
+						<p><%= Product.description %></p>
 					</div>
 					<div class="free_delivery d-flex flex-row align-items-center justify-content-center">
 						<span class="ti-truck"></span><span>free delivery</span>
 					</div>
-					<div class="original_price">$629.99</div>
-					<div class="product_price">$495.00</div>
+					<div class="original_price">$$<%= (Product.price * 1.20).toFixed(2) %></div>
+					<div class="product_price">$<%= Product.price %></div>
 					<ul class="star_rating">
 						<li><i class="fa fa-star" aria-hidden="true"></i></li>
 						<li><i class="fa fa-star" aria-hidden="true"></i></li>
@@ -289,7 +310,7 @@
 								<div class="tab_image">
 									<img src="images/desc_1.jpg" alt="">
 								</div>
-								<div class="tab_text_block">
+								<!-- <div class="tab_text_block">
 									<h2>Pocket cotton sweatshirt</h2>
 									<p>Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis ut...</p>
 								</div>
@@ -297,14 +318,14 @@
 							<div class="col-lg-5 offset-lg-2 desc_col">
 								<div class="tab_image">
 									<img src="images/desc_2.jpg" alt="">
-								</div>
-								<div class="tab_text_block">
+								</div> -->
+								<!-- <div class="tab_text_block">
 									<h2>Pocket cotton sweatshirt</h2>
 									<p>Nam tempus turpis at metus scelerisque placerat nulla deumantos solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis ut...</p>
 								</div>
 								<div class="tab_image desc_last">
 									<img src="images/desc_3.jpg" alt="">
-								</div>
+								</div> -->
 							</div>
 						</div>
 					</div>

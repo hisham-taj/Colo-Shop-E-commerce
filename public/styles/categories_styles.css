@@ -1294,18 +1294,31 @@ section
 	width: calc(100% - 200px);
 	padding-left: 34px;
 }
+.product-grid {
+    display: flex;               /* Enable Flexbox */
+    flex-wrap: wrap;            /* Allow items to wrap to the next line */
+    justify-content: space-between; /* Distribute space between items */
+    margin-top: 57px;
+    width: 100%;
+}
 
-.product-grid
-{
-	width: 100%;
-	margin-top: 57px;
+.product-item {
+    flex: 0 1 calc(25% - 10px); /* Set the base size to 25%, with some margin */
+    margin-bottom: 20px;        /* Add margin between rows */
+    position: relative;         /* Required for the pseudo-element to position correctly */
 }
-.product-item
-{
-	width: 25%;
-	height: 380px;
-	cursor: pointer;
+@media (max-width: 768px) {
+    .product-item {
+        flex: 0 1 calc(50% - 10px); /* Two items per row on smaller screens */
+    }
 }
+
+@media (max-width: 480px) {
+    .product-item {
+        flex: 0 1 100%; /* One item per row on very small screens */
+    }
+}
+
 .product-item::after
 {
 	display: block;
