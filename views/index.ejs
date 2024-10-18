@@ -194,21 +194,21 @@
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(images/banner_1.jpg)">
 						<div class="banner_category">
-							<a href="/index/categories">women's</a>
+							<a href="/index/categories/<%= '668e5a40d83d16a68234f195' %>">women</a>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(images/banner_2.jpg)">
 						<div class="banner_category">
-							<a href="/index/categories">accessories's</a>
+							<a href="/index/categories/<%= '66a4d17029181ea860ded4fd' %>">accessories</a>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(images/banner_3.jpg)">
 						<div class="banner_category">
-							<a href="/index/categories">men's</a>
+							<a href="/index/categories/<%= '668e5a33d83d16a68234f191' %>">men</a>
 						</div>
 					</div>
 				</div>
@@ -251,9 +251,9 @@
 									<img src="/productImages/<%=product.image %>" alt="img cant load">
 								</div>
 								<div class="favorite favorite_left"></div>
-								<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-$20</span></div>
+								<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-20%</span></div>
 								<div class="product_info">
-									<h6 class="product_name"><a href="index/single"><%=product.name  %></a></h6>
+									<h6 class="product_name"><a href="index/single/<%= product._id %>"><%=product.name  %></a></h6>
 									<div class="product_price">$<%=product.price %><span>$<%= (product.price * 1.20).toFixed(2) %></span></div>
 								</div>
 							</div>

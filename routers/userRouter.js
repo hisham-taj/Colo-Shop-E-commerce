@@ -8,8 +8,8 @@ userrouter
   .get("/signup", controllers.getsignup)
   .get("/contact", controllers.getcontact)
   .get("/logout", controllers.logout)
-  .get("/categories", controllers.getcategories)
-  .get("/single", controllers.getsingle);
+  .get("/categories/:categoryId", controllers.getcategories)
+  .get("/single/:productId", controllers.getsingle);
 
 userrouter
   .post("/login", controllers.postlogin)
