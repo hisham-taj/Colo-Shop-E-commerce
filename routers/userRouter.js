@@ -9,10 +9,14 @@ userrouter
   .get("/contact", controllers.getcontact)
   .get("/logout", controllers.logout)
   .get("/categories/:categoryId", controllers.getcategories)
-  .get("/single/:productId", controllers.getsingle);
+  .get("/single/:productId", controllers.getsingle)
+  .get('/cart',controllers.getCart)
 
 userrouter
   .post("/login", controllers.postlogin)
-  .post("/signup", controllers.postsignup);
+  .post("/signup", controllers.postsignup)
+  .post("/cart/add", controllers.addToCart)
+  .post("/cart/remove",controllers.removefromCart)
+
 
 module.exports = userrouter;

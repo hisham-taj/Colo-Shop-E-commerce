@@ -61,20 +61,106 @@ module.exports = controllers = {
     try {
       const productId = req.params.productId;
       const Product = await product.findById(productId);
-      console.log("p id: " , productId);
+      // console.log("p id: " , productId);
+      const cart = req.session.cart || []
       
       if(!Product){
         res.status(404).send('product not found')
       }
-    res.render("single", { isAuth: req.session.isAuth, Product });
+    res.render("single", { isAuth: req.session.isAuth, Product ,cart});
     
     } catch (error) {
       
     }
   },
 
+  getCart: (req, res) => {
+    try {
+      const cart = req.session.cart || [];
+      res.render("cart", { isAuth: req.session.isAuth, cart });
+    } catch (error) {
+      console.error("Error rendering cart page:", error);
+      res.status(500).send("Cannot render cart page");
+    }
+  },
+  
+  addToCart: async (req, res) => {
+    try {
+
+      const { productId, quantity } = req.body; // Get productId and quantity from the request body
+
+      // console.log("id: ",productId);
+      // console.log("adding product");
+      
+      // Fetch product details
+      const Product = await product.findById(productId);
+      // console.log("product: ", Product);
+      
+      if (!Product) {
+        return res.status(404).send("Product not found");
+      }
+  
+      // Initialize the cart in session if it doesn't exist
+      if (!req.session.cart) {
+        req.session.cart = [];
+      }
+  
+      // Check if the product already exists in the cart
+      const existingProductIndex = req.session.cart.findIndex(
+        (item) => item.productId === productId
+      );
+  
+      if (existingProductIndex > -1) {
+        // Update the quantity of the existing product
+        req.session.cart[existingProductIndex].quantity += quantity || 1; // Default to 1 if quantity is not provided
+      } else {
+        // Add new product to the cart
+        req.session.cart.push({
+          productId: productId,
+          name: Product.name,
+          price: Product.price,
+          image: Product.image, // Include image if needed
+          quantity: quantity || 1, // Default to 1 if not provided
+        });
+      }
+      res.json({ success: true, message: "Product added to cart", cart: req.session.cart });
+      // console.log("Session after cart update:", req.session);
+
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      res.status(500).send("Error adding product to cart");
+    }
+  },  
+
+  removefromCart: async (req,res)=>{
+    try {
+      const {productId} = req.body;
+      
+      if(!productId){
+        console.error("no id");
+        return res.status(400).json({ success: false, message: "Product ID is required" });
+      }
+
+      console.log("Product ID received:", productId);
+
+      if(!req.session.cart){
+        return res.status(400).json({ success: false, message:"Cart is empty" });
+      }
+
+      req.session.cart = req.session.cart.filter(item => item.productId.toString() !== productId);
+      const updatedTotal = req.session.cart.reduce((total,item) => total + item.price * item.quantity, 0)
+
+      res.json({success: true, message:"product removed from cart", cart: req.session.cart, total: updatedTotal});
+      // console.log("status: ",req.session.cart);
+
+    } catch (error) {
+      res.status(500).send("error removing product");
+      console.error("error removing from cart");
+    }
+  },
+
   postsignup: async (req, res) => {
-    console.log("signup");
+    // console.log("signup");
     const { name, email, password, password2 } = req.body;
     console.log(req.body);
 

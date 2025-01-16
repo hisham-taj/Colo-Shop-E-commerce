@@ -33,6 +33,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
+
+
 // Routes
 const userRouter = require('./routers/userRouter');
 const adminRouter = require('./routers/adminRouter');
