@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const User = require("../model/user");
+const Order = require("../model/order");
 const { Category, subCategory, product } = require("../model/Products-db");
 
 module.exports = controllers = {
@@ -42,16 +43,19 @@ module.exports = controllers = {
 
   getcategories: async (req, res) => {
     try {
-
       const categoryId = req.params.categoryId;
-      const categories = await Category.find()
+      const categories = await Category.find();
       const Products = await product
         .find({ category: categoryId })
         .populate("subcategory");
 
-        // console.log("products",Products);
-          
-        res.render('categories', {isAuth: req.session.isAuth, Products, categories});
+      // console.log("products",Products);
+
+      res.render("categories", {
+        isAuth: req.session.isAuth,
+        Products,
+        categories,
+      });
     } catch (error) {
       console.error("Error fetching products by category:", error);
       res.status(500).send("Server error");
@@ -62,16 +66,13 @@ module.exports = controllers = {
       const productId = req.params.productId;
       const Product = await product.findById(productId);
       // console.log("p id: " , productId);
-      const cart = req.session.cart || []
-      
-      if(!Product){
-        res.status(404).send('product not found')
+      const cart = req.session.cart || [];
+
+      if (!Product) {
+        res.status(404).send("product not found");
       }
-    res.render("single", { isAuth: req.session.isAuth, Product ,cart});
-    
-    } catch (error) {
-      
-    }
+      res.render("single", { isAuth: req.session.isAuth, Product, cart });
+    } catch (error) {}
   },
 
   getCart: (req, res) => {
@@ -83,33 +84,32 @@ module.exports = controllers = {
       res.status(500).send("Cannot render cart page");
     }
   },
-  
+
   addToCart: async (req, res) => {
     try {
-
       const { productId, quantity } = req.body; // Get productId and quantity from the request body
 
       // console.log("id: ",productId);
       // console.log("adding product");
-      
+
       // Fetch product details
       const Product = await product.findById(productId);
       // console.log("product: ", Product);
-      
+
       if (!Product) {
         return res.status(404).send("Product not found");
       }
-  
+
       // Initialize the cart in session if it doesn't exist
       if (!req.session.cart) {
         req.session.cart = [];
       }
-  
+
       // Check if the product already exists in the cart
       const existingProductIndex = req.session.cart.findIndex(
         (item) => item.productId === productId
       );
-  
+
       if (existingProductIndex > -1) {
         // Update the quantity of the existing product
         req.session.cart[existingProductIndex].quantity += quantity || 1; // Default to 1 if quantity is not provided
@@ -123,41 +123,135 @@ module.exports = controllers = {
           quantity: quantity || 1, // Default to 1 if not provided
         });
       }
-      res.json({ success: true, message: "Product added to cart", cart: req.session.cart });
+      res.json({
+        success: true,
+        message: "Product added to cart",
+        cart: req.session.cart,
+      });
       // console.log("Session after cart update:", req.session);
-
     } catch (error) {
       console.error("Error adding to cart:", error);
       res.status(500).send("Error adding product to cart");
     }
-  },  
+  },
 
-  removefromCart: async (req,res)=>{
+  removefromCart: async (req, res) => {
     try {
-      const {productId} = req.body;
-      
-      if(!productId){
+      const { productId } = req.body;
+
+      if (!productId) {
         console.error("no id");
-        return res.status(400).json({ success: false, message: "Product ID is required" });
+        return res
+          .status(400)
+          .json({ success: false, message: "Product ID is required" });
       }
 
       console.log("Product ID received:", productId);
 
-      if(!req.session.cart){
-        return res.status(400).json({ success: false, message:"Cart is empty" });
+      if (!req.session.cart) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Cart is empty" });
       }
 
-      req.session.cart = req.session.cart.filter(item => item.productId.toString() !== productId);
-      const updatedTotal = req.session.cart.reduce((total,item) => total + item.price * item.quantity, 0)
+      req.session.cart = req.session.cart.filter(
+        (item) => item.productId.toString() !== productId
+      );
+      const updatedTotal = req.session.cart.reduce(
+        (total, item) => total + item.price * item.quantity,
+        0
+      );
 
-      res.json({success: true, message:"product removed from cart", cart: req.session.cart, total: updatedTotal});
+      res.json({
+        success: true,
+        message: "product removed from cart",
+        cart: req.session.cart,
+        total: updatedTotal,
+      });
       // console.log("status: ",req.session.cart);
-
     } catch (error) {
       res.status(500).send("error removing product");
       console.error("error removing from cart");
     }
   },
+
+  getCheckout: async (req, res) => {
+    try {
+      const cart = req.session.cart || [];
+      const isCartEmpty = cart.length === 0;
+      console.log("aaaaaaaaa");
+
+      res.render("checkout", { cart, isCartEmpty });
+    } catch (error) {
+      res.status(500).send("error in checkout");
+      console.error(error);
+    }
+  },
+
+
+createOrder : async (req, res) => {
+  try {
+    const { userId, cart, paymentMethod, address } = req.body;
+
+    // Validate required fields
+    if (!userId || !cart || cart.length === 0 || !address) {
+      return res.status(400).json({ message: "Invalid order request" });
+    }
+
+    let totalAmount = 0;
+    const orderItems = [];
+
+    // Validate stock and calculate total amount
+    for (const item of cart) {
+      const product = await Product.findById(item.productId);
+
+      if (!product) {
+        return res.status(404).json({ message: `Product ${item.productId} not found` });
+      }
+
+      if (product.stock < item.quantity) {
+        return res.status(400).json({
+          message: `Insufficient stock for product ${product.name}. Available: ${product.stock}`,
+        });
+      }
+
+      // Deduct stock
+      product.stock -= item.quantity;
+      await product.save();
+
+      // Add item to order
+      orderItems.push({
+        product: product._id,
+        quantity: item.quantity,
+        price: product.price,
+      });
+
+      totalAmount += product.price * item.quantity;
+    }
+
+    // Create new order
+    const newOrder = new Order({
+      user: userId,
+      items: orderItems,
+      totalAmount,
+      paymentMethod,
+      address,
+      paymentStatus: "Pending",
+    });
+
+    await newOrder.save();
+
+    res.status(201).json({
+      message: "Order placed successfully",
+      order: newOrder,
+    });
+
+  } catch (error) {
+    console.error("Error creating order:", error);
+    res.status(500).json({ message: "Error creating order", error: error.message });
+  }
+},
+
 
   postsignup: async (req, res) => {
     // console.log("signup");

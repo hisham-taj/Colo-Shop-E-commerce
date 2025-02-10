@@ -6,6 +6,42 @@
   <title>Admin Orders</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/styles/adminstyle/adminOrders.css">
+  <style>
+    /* Enhancing Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    tbody tr:hover {
+      background-color: #f5f5f5;
+    }
+    /* Status Badges */
+    .status {
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      display: inline-block;
+    }
+    .shipped { background-color: #4CAF50; color: white; }
+    .processing { background-color: #FFC107; color: black; }
+    .pending { background-color: #FF5733; color: white; }
+    /* Button Styling */
+    .btn {
+      text-decoration: none;
+      padding: 5px 10px;
+      margin: 2px;
+      border-radius: 5px;
+    }
+    .btn-view { background-color: #007BFF; color: white; }
+    .btn-delete { background-color: #DC3545; color: white; }
+    .btn:hover { opacity: 0.8; }
+  </style>
 </head>
 <body>
   <div class="admin-container">
@@ -20,7 +56,7 @@
           <li><a href="/admin/admin-products"><i class="fas fa-box"></i> Products</a></li>
           <li><a href="/admin/admin-categories"><i class="fas fa-tags"></i> Categories</a></li>
           <li><a href="/admin/adminOrders" class="active"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-          <li><a href="/admin/admin-users"><i class="fas fa-sitemap"></i> Users</a></li>
+          <li><a href="/admin/admin-users"><i class="fas fa-users"></i> Users</a></li>
         </ul>
       </nav>
     </div>
@@ -28,15 +64,16 @@
       <header>
         <h1>Orders Management</h1>
         <div class="user-info">
-          <span>Welcome, <%= admin.name %></span>
+          <span>Welcome, <%- admin.name %></span>
           <% if (isAuth) { %>
             <a href="/admin/adminlogout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>  
-            <% } else { %>
-              <a href="/admin/admin-login" class="logout-btn"><i class="fa fa-sign-in " aria-hidden="true"></i> Sign In</a>
-              <a href="/admin/admin-signup" class="logout-btn"><i class="fa fa-user-plus" aria-hidden="true"></i> Register</a>
-              <% } %>
+          <% } else { %>
+            <a href="/admin/admin-login" class="logout-btn"><i class="fa fa-sign-in"></i> Sign In</a>
+            <a href="/admin/admin-signup" class="logout-btn"><i class="fa fa-user-plus"></i> Register</a>
+          <% } %>
         </div>
       </header>
+      
       <div class="dashboard-content">
         <div class="card">
           <h3>Total Orders</h3>
@@ -47,6 +84,8 @@
           <p class="number">23</p>
         </div>
       </div>
+
+      <!-- Orders Table -->
       <div class="card">
         <h3>Order List</h3>
         <table>
@@ -61,27 +100,27 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Replace with dynamic content in real application -->
+            <!-- Replace with dynamic content -->
             <tr>
               <td>1001</td>
               <td>John Doe</td>
               <td>2024-07-22</td>
-              <td>Shipped</td>
+              <td><span class="status shipped">Shipped</span></td>
               <td>$123.45</td>
               <td>
-                <a href="#" class="btn btn-view"><i class="fas fa-eye"></i> View</a>
-                <a href="#" class="btn btn-delete"><i class="fas fa-trash"></i> Delete</a>
+                <a href="#" class="btn btn-view" title="View Order"><i class="fas fa-eye"></i></a>
+                <a href="#" class="btn btn-delete" title="Delete Order"><i class="fas fa-trash"></i></a>
               </td>
             </tr>
             <tr>
               <td>1002</td>
               <td>Jane Smith</td>
               <td>2024-07-21</td>
-              <td>Processing</td>
+              <td><span class="status processing">Processing</span></td>
               <td>$678.90</td>
               <td>
-                <a href="#" class="btn btn-view"><i class="fas fa-eye"></i> View</a>
-                <a href="#" class="btn btn-delete"><i class="fas fa-trash"></i> Delete</a>
+                <a href="#" class="btn btn-view" title="View Order"><i class="fas fa-eye"></i></a>
+                <a href="#" class="btn btn-delete" title="Delete Order"><i class="fas fa-trash"></i></a>
               </td>
             </tr>
             <!-- More rows as needed -->
