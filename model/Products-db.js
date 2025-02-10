@@ -62,5 +62,3 @@ module.exports = {
   product : mongoose.model('Product', productSchema),
   subCategory  : mongoose.model('Subcategory', SubcategorySchema)
 }
-
-
